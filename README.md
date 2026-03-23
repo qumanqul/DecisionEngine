@@ -95,7 +95,7 @@ In a real system this would be replaced by an integration with an external credi
 ## Key Technical Decisions
 
 **BigDecimal for monetary values**
-`double` and `float` can produce rounding errors (e.g. `0.1 + 0.2 = 0.30000000000000004`). For financial calculations, `BigDecimal` with explicit `RoundingMode` is the correct choice.
+`double` and `float` can produce rounding errors (e.g. `0.1 + 0.2 = 0.30000000000000004`). For financial calculations, `BigDecimal` with explicit `RoundingMode` is a more correct choice.
 
 **Mathematical derivation instead of brute force**
 Rather than iterating through all possible amounts to find the maximum, the maximum is derived algebraically from the formula. This is both more efficient and clearer in intent.
