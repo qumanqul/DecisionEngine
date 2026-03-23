@@ -55,8 +55,8 @@ The UI will be available at `http://localhost:5173`
 ```
 
 **Constraints:**
-- Loan amount: €2000 – €10000
-- Loan period: 12 – 60 months
+- Loan amount: €2000 - €10000
+- Loan period: 12 - 60 months
 
 ## How the Decision Engine Works
 
@@ -76,7 +76,7 @@ A loan is approved when `credit_score >= 1`, which means:
 So the maximum approvable amount is `credit_modifier * period`, capped between €2000 and €10000.
 
 **Decision flow:**
-1. Look up the personal code — if not found, deny
+1. Look up the personal code - if not found, deny
 2. If the person has debt (`credit_modifier = 0`), deny immediately
 3. Calculate the maximum approvable amount for the requested period
 4. If no suitable amount exists for that period, search across all periods (12–60)
@@ -104,19 +104,21 @@ Rather than iterating through all possible amounts to find the maximum, the maxi
 Using `Decision.POSITIVE` / `Decision.NEGATIVE` instead of raw strings `"positive"` / `"negative"` eliminates the risk of typos and makes the contract between backend and frontend explicit.
 
 **Constructor injection over @Autowired**
-Constructor injection makes dependencies explicit, supports immutability, and is easier to test — you can instantiate the class directly with `new` without needing a Spring context.
+Constructor injection makes dependencies explicit, supports immutability, and is easier to test - you can instantiate the class directly with `new` without needing a Spring context.
 
 **PII masking in logs**
 Personal codes are sensitive identifiers. Logging them in full would violate data privacy practices, so only the last 4 digits are shown (e.g. `****0987`). In production, a more robust masking strategy or structured logging with field-level redirection would be used.
 
 **Validation on both frontend and backend**
-Frontend validation provides immediate feedback without a network round trip. Backend validation is the authoritative layer — it protects the API even if requests bypass the UI entirely.
+Frontend validation provides immediate feedback without a network round trip. Backend validation is the authoritative layer - it protects the API even if requests bypass the UI entirely.
 
 ## What I Would Improve
 
 If I were to extend this beyond the scope of the assignment:
 
-- **Replace the hardcoded mock with a real integration** — connect to an external credit registry to build a comprehensive user profile
-- **Add a correlation ID to logs** — tracing requests across service boundaries becomes much easier when every log entry carries a shared request ID
-- **Expand test coverage** — add integration tests for the controller layer and edge cases around boundary values (exactly €2000, exactly 60 months)
-- **Introduce rate limiting** — a decision engine API is a natural target for abuse; limiting requests per IP would be a basic but important safeguard
+- **Replace the hardcoded mock with a real integration** - connect to an external credit registry to build a comprehensive user profile
+- **Add a correlation ID to logs** - tracing requests across service boundaries becomes much easier when every log entry carries a shared request ID
+- **Expand test coverage** - add integration tests for the controller layer and edge cases around boundary values (exactly €2000, exactly 60 months)
+- **Introduce rate limiting** - a decision engine API is a natural target for abuse; limiting requests per IP would be a basic but important safeguard
+
+Additionally, the assignment could be improved by clarifying the expected behavior regarding the requested loan amount. It is currently ambiguous whether the system should prioritize returning the requested amount or always maximize the approved amount. Providing explicit examples and clearly defined edge cases would help eliminate this ambiguity.
